@@ -40,22 +40,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
         questionFactory?.requestNextQuestion()
-        
-        var documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        documentURL.appendPathComponent("top250MoviesIMDB.json")
-        let jsonString = try? String(contentsOf: documentURL)
-        guard let data = jsonString?.data(using: .utf8) else {
-            print("Failed to Data from JSON")
-            return
-        }
-        
-        do {
-            let result = try JSONDecoder().decode(Top.self, from: data)
-            
-        } catch {
-            print("Failed to parse: \(error.localizedDescription)")
-        }
-        
     }
     
     // MARK: - QuestionFactoryDelegate

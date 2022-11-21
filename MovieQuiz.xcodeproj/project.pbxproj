@@ -20,6 +20,8 @@
 		1D36B6BA29238AEA008576B7 /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D36B6B929238AEA008576B7 /* StatisticService.swift */; };
 		1D36B6BC29266A9D008576B7 /* GameRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D36B6BB29266A9D008576B7 /* GameRecordModel.swift */; };
 		1D36B6BE29266C41008576B7 /* StatisticServiceImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D36B6BD29266C41008576B7 /* StatisticServiceImplementation.swift */; };
+		1D36B6C3292BD1A4008576B7 /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D36B67728F7DB3A008576B7 /* YS Display-Bold.ttf */; };
+		1D36B6C4292BD1A7008576B7 /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D36B67828F7DB3A008576B7 /* YS Display-Medium.ttf */; };
 		AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
 		AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */; };
@@ -230,6 +232,8 @@
 				AD1ABABE2831907F00B3E448 /* LaunchScreen.storyboard in Resources */,
 				AD1ABABB2831907F00B3E448 /* Assets.xcassets in Resources */,
 				AD1ABAB92831907B00B3E448 /* Main.storyboard in Resources */,
+				1D36B6C3292BD1A4008576B7 /* YS Display-Bold.ttf in Resources */,
+				1D36B6C4292BD1A7008576B7 /* YS Display-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
