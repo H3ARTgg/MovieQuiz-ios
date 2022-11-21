@@ -1,12 +1,5 @@
 import UIKit
 
-//struct Actor: Codable {
-//    let id: String
-//    let image: String
-//    let name: String
-//    let asCharacter: String
-//}
-
 struct Top: Decodable {
     let items: [Movie]
 }
