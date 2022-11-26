@@ -60,7 +60,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         let alert = AlertModel(title: "Ошибка", message: message, buttonText: "Попробовать еще раз") { [weak self] _ in
             guard let self = self else { return }
-            //self.presenter.restartGame()
+            self.restartGame()
             
         }
         alertPresenter?.createAlert(alertModel: alert)
@@ -113,6 +113,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     // MARK: - Private functions
+    private func restartGame() {
+        questionFactory?.loadData()
+        showLoadingIndicator()
+    }
+    
     private func show(quiz step: QuizStepViewModel) {
         counterLabel.text = step.questionNumber
         textLabel.text = step.question
