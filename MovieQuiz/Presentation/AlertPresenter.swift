@@ -12,7 +12,7 @@ struct AlertPresenter: AlertPresenterProtocol {
     
     weak var delegate: AlertPresenterDelegate?
     
-    func createAlert(alertModel: AlertModel?) {
+    func showAlert(alertModel: AlertModel?) {
         let alertController = UIAlertController(
             title: alertModel?.title,
             message: alertModel?.message,

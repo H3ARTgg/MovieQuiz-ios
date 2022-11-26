@@ -70,11 +70,11 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 switch result {
                 case .success(let mostPopularMovies):
                     self.movies = mostPopularMovies.items
-                    if mostPopularMovies.errorMessage != "" {
+                    if !mostPopularMovies.errorMessage.isEmpty {
                         self.delegate?.didFailToLoad(message: mostPopularMovies.errorMessage)
-                        break
+                    } else {
+                        self.delegate?.didLoadDataFromServer()
                     }
-                    self.delegate?.didLoadDataFromServer()
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error)
                     

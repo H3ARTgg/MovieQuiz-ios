@@ -40,14 +40,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
+        
         imageView.layer.cornerRadius = 20
+        
+        activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         questionFactory?.loadData()
     }
     
     // MARK: - Functions for network
     private func showLoadingIndicator() {
-        activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
     
@@ -63,7 +65,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             self.restartGame()
             
         }
-        alertPresenter?.createAlert(alertModel: alert)
+        alertPresenter?.showAlert(alertModel: alert)
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -153,7 +155,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 
             }
         
-        alertPresenter?.createAlert(alertModel: alert)
+        alertPresenter?.showAlert(alertModel: alert)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
