@@ -32,14 +32,40 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        questionFactory = QuestionFactory(delegate: self)
+        questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
-        questionFactory?.requestNextQuestion()
+        
+        imageView.layer.cornerRadius = 20
+        
+        activityIndicator.hidesWhenStopped = true
+        showLoadingIndicator()
+        questionFactory?.loadData()
+    }
+    
+    // MARK: - Functions for network
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let alert = AlertModel(title: "Ошибка", message: message, buttonText: "Попробовать еще раз") { [weak self] _ in
+            guard let self = self else { return }
+            self.restartGame()
+            
+        }
+        alertPresenter?.showAlert(alertModel: alert)
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -50,8 +76,30 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         let viewModel = convert(model: question)
         
         DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
+            guard let self = self else { return }
+            self.show(quiz: viewModel)
+
         }
+        hideLoadingIndicator()
+    }
+    
+    func didLoadDataFromServer() {
+        showLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
+    // Для ошибок: при неуспешной загрузке измененного изображения по ссылке и при наличии errorMessage у MostPopularMovies
+    func didFailToLoad(message: String) {
+        showNetworkError(message: message)
+    }
+    
+    // Для отображения индикатора, пока загружается измененное изображение по ссылке
+    func resizedImageLoading() {
+        showLoadingIndicator()
     }
     
     // MARK: - AlertPresenterDelegate
@@ -79,6 +127,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     // MARK: - Private functions
+    private func restartGame() {
+        showLoadingIndicator()
+        questionFactory?.loadData()
+    }
+    
     private func show(quiz step: QuizStepViewModel) {
         counterLabel.text = step.questionNumber
         textLabel.text = step.question
@@ -102,11 +155,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 
             }
         
-        alertPresenter?.createAlert(alertModel: alert)
+        alertPresenter?.showAlert(alertModel: alert)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(), question: model.text, questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+        return QuizStepViewModel(
+            image: UIImage(data: model.image) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
       }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -120,7 +176,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        imageView.layer.cornerRadius = 20
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
