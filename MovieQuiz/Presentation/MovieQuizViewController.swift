@@ -40,18 +40,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
-        questionFactory?.loadData()
+        imageView.layer.cornerRadius = 20
         showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
     // MARK: - Functions for network
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
     
@@ -74,18 +74,30 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         let viewModel = convert(model: question)
         
         DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
+            guard let self = self else { return }
+            self.show(quiz: viewModel)
+
         }
+        hideLoadingIndicator()
     }
     
     func didLoadDataFromServer() {
-        hideLoadingIndicator()
+        showLoadingIndicator()
         questionFactory?.requestNextQuestion()
-        
     }
     
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
+    }
+    
+    // Для ошибок: при неуспешной загрузке измененного изображения по ссылке и при наличии errorMessage у MostPopularMovies
+    func didFailToLoad(message: String) {
+        showNetworkError(message: message)
+    }
+    
+    // Для отображения индикатора, пока загружается измененное изображение по ссылке
+    func resizedImageLoading() {
+        showLoadingIndicator()
     }
     
     // MARK: - AlertPresenterDelegate
@@ -114,8 +126,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     // MARK: - Private functions
     private func restartGame() {
-        questionFactory?.loadData()
         showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -162,7 +174,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        imageView.layer.cornerRadius = 20
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }

@@ -146,10 +146,10 @@ YP White</string>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ZIx-aG-eXJ" secondAttribute="bottom" id="6eF-1l-hyo"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZIx-aG-eXJ" secondAttribute="trailing" constant="20" id="8rq-Uw-mwg"/>
-                            <constraint firstItem="7vX-HA-6aO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Lhf-w5-Oe0"/>
                             <constraint firstItem="ZIx-aG-eXJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="PXL-1X-squ"/>
-                            <constraint firstItem="7vX-HA-6aO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nBZ-T4-bk1"/>
+                            <constraint firstItem="7vX-HA-6aO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pc9-zx-Wh5"/>
                             <constraint firstItem="ZIx-aG-eXJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="v1z-Ef-nuo"/>
+                            <constraint firstItem="7vX-HA-6aO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xFQ-F4-gbI"/>
                         </constraints>
                     </view>
                     <connections>
