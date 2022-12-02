@@ -1,21 +1,5 @@
 import UIKit
 
-struct Top: Decodable {
-    let items: [Movie]
-}
-
-struct Movie: Codable {
-    let id: String
-    let title: String
-    let rank: String
-    let fullTitle: String
-    let year: String
-    let image: String
-    let crew: String
-    let imDbRating: String
-    let imDbRatingCount: String
-}
-
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
     // MARK: - Lifecycle
     private var correctAnswers: Int = 0
@@ -39,6 +23,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
+        presenter.viewController = self
         
         imageView.layer.cornerRadius = 20
         
@@ -113,17 +98,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     // MARK: - Actions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else { return }
-        
-        let answer = false
-        showAnswerResult(isCorrect: answer == currentQuestion.correctAnswer)
+        presenter.currentQuestion = currentQuestion
+     
+        presenter.noButtonClicked()
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else { return }
+        presenter.currentQuestion = currentQuestion
 
-        let answer = true
-        showAnswerResult(isCorrect: answer == currentQuestion.correctAnswer)
+        presenter.yesButtonClicked()
     }
     
     // MARK: - Private functions
@@ -158,7 +141,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         alertPresenter?.showAlert(alertModel: alert)
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             correctAnswers += 1
         }
