@@ -23,6 +23,7 @@ final class StatisticServiceImplementation: StatisticService {
             userDefaults.set(newValue, forKey: Keys.array.rawValue)
         }
     }
+    
     private(set) var totalAccuracy: Double {
         get {
             let result = userDefaults.double(forKey: Keys.total.rawValue)

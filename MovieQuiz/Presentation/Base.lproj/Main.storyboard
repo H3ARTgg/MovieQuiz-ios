@@ -42,6 +42,7 @@ YP White</string>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLn-3e-FlM" userLabel="Index Label">
                                                 <rect key="frame" x="338" y="0.0" width="36" height="23.5"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="Index"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor">
                                                     <string key="name">
@@ -57,6 +58,7 @@ YP White</string>
                                             <string key="name">
 YP White</string>
                                         </color>
+                                        <accessibility key="accessibilityConfiguration" identifier="Poster"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="K0s-qS-Rp6" secondAttribute="height" multiplier="2:3" id="Vdf-LL-iI1"/>
                                         </constraints>
@@ -91,6 +93,7 @@ YP White</string>
                                                     <string key="name">
 YP White</string>
                                                 </color>
+                                                <accessibility key="accessibilityConfiguration" identifier="No"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="60" id="oth-0W-hUz"/>
                                                 </constraints>
@@ -115,6 +118,7 @@ YP White</string>
                                                     <string key="name">
 YP White</string>
                                                 </color>
+                                                <accessibility key="accessibilityConfiguration" identifier="Yes"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="60" id="5AI-Vl-gAV"/>
                                                 </constraints>

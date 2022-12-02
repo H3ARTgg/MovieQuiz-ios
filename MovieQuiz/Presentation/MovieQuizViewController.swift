@@ -3,6 +3,7 @@ import UIKit
 struct Top: Decodable {
     let items: [Movie]
 }
+
 struct Movie: Codable {
     let id: String
     let title: String
@@ -17,15 +18,13 @@ struct Movie: Codable {
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
     // MARK: - Lifecycle
-    
-    private var currentQuestionIndex: Int = 0
     private var correctAnswers: Int = 0
     
-    private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
     private var statisticService: StatisticService?
     private var currentQuestion: QuizQuestion?
+    private let presenter = MovieQuizPresenter()
     
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var textLabel: UILabel!
@@ -65,6 +64,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             self.restartGame()
             
         }
+        
         alertPresenter?.showAlert(alertModel: alert)
     }
     
@@ -73,7 +73,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         guard let question = question else { return }
         
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -148,7 +148,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             buttonText: result.buttonText) {
                 [weak self] _ in
                 guard let self = self else { return }
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 
                 self.questionFactory?.requestNextQuestion()
@@ -157,13 +157,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         alertPresenter?.showAlert(alertModel: alert)
     }
-    
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-      }
     
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
@@ -186,13 +179,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func showNextQuestionOrResults() {
-      if currentQuestionIndex == questionsAmount - 1 {
+        if presenter.isLastQuestion() {
           guard let statisticService = statisticService else {
               return
           }
-          statisticService.store(correct: correctAnswers, total: questionsAmount)
+          
+          statisticService.store(correct: correctAnswers, total: presenter.questionsAmount)
           let text = """
-    Ваш результат: \(correctAnswers) из \(questionsAmount)
+    Ваш результат: \(correctAnswers) из \(presenter.questionsAmount)
     Количество сыгранных квизов: \(statisticService.gamesCount)
     Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
     Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
@@ -205,7 +199,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
           show(quiz: viewModel)
           
       } else {
-          currentQuestionIndex += 1
+          presenter.switchToNextQuestion()
           questionFactory?.requestNextQuestion()
       }
     }
