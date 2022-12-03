@@ -8,14 +8,28 @@
 import Foundation
 import UIKit
 
-final class MovieQuizPresenter {
+final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     var correctAnswers: Int = 0
     var currentQuestion: QuizQuestion?
-    weak var viewController: MovieQuizViewController?
-    var questionFactory: QuestionFactoryProtocol?
+    private weak var viewController: MovieQuizViewController?
+    private var questionFactory: QuestionFactoryProtocol?
+    
+    init(viewController: MovieQuizViewController) {
+        self.viewController = viewController
+        
+        questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
+        questionFactory?.loadData()
+        viewController.showLoadingIndicator()
+    }
+    
+    func restartGame() {
+        correctAnswers = 0
+        resetQuestionIndex()
+        questionFactory?.requestNextQuestion()
+    }
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
@@ -42,6 +56,12 @@ final class MovieQuizPresenter {
     
     func yesButtonClicked() {
         didAnswer(isYes: true)
+    }
+    
+    func didAnswer(isCorrectAnswer: Bool) {
+        if isCorrectAnswer {
+            correctAnswers += 1
+        }
     }
     
     private func didAnswer(isYes: Bool) {
@@ -78,5 +98,25 @@ final class MovieQuizPresenter {
           self.switchToNextQuestion()
           questionFactory?.requestNextQuestion()
       }
+    }
+    
+    // MARK: - QuestionFactoryDelegate
+    func didLoadDataFromServer() {
+        viewController?.showLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        viewController?.showNetworkError(message: error.localizedDescription)
+    }
+    
+    // Для ошибок: при неуспешной загрузке измененного изображения по ссылке и при наличии errorMessage у MostPopularMovies
+    func didFailToLoad(message: String) {
+        viewController?.showNetworkError(message: message)
+    }
+    
+    // Для отображения индикатора, пока загружается измененное изображение по ссылке
+    func resizedImageLoading() {
+        viewController?.showLoadingIndicator()
     }
 }
