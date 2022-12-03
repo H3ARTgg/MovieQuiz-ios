@@ -54,9 +54,9 @@ final class QuestionFactory: QuestionFactoryProtocol {
         case FailToLoadImage = "Ошибка загрузки картинки"
     }
     
-    private var movies: [MostPopularMovie] = []
     private let moviesLoader: MoviesLoading
-    weak var delegate: QuestionFactoryDelegate?
+    private var movies: [MostPopularMovie] = []
+    private weak var delegate: QuestionFactoryDelegate?
     
     init(delegate: QuestionFactoryDelegate, moviesLoader: MoviesLoading) {
         self.delegate = delegate

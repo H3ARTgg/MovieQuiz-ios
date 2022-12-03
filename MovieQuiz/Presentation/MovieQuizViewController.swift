@@ -1,31 +1,52 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
+    
     // MARK: - Lifecycle
-    private var alertPresenter: AlertPresenterProtocol?
-    private var statisticService: StatisticService?
-    private var presenter: MovieQuizPresenter!
     
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var textLabel: UILabel!
-    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var imageView: UIImageView! {
+        didSet {
+            imageView.layer.cornerRadius = 20
+        }
+    }
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    
+    private var alertPresenter: AlertPresenterProtocol?
+    private var presenter: MovieQuizPresenter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         alertPresenter = AlertPresenter(delegate: self)
-        statisticService = StatisticServiceImplementation()
         presenter = MovieQuizPresenter(viewController: self)
-        
-        imageView.layer.cornerRadius = 20
         
         activityIndicator.hidesWhenStopped = true
     }
     
+    // MARK: - Actions
+    
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        presenter.noButtonClicked()
+    }
+    
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        presenter.yesButtonClicked()
+    }
+    
+    // MARK: - AlertPresenterDelegate
+    
+    func didRecieveAlertController(alertController: UIAlertController?) {
+        guard let alertController = alertController else { return }
+        
+        present(alertController, animated: true)
+    }
+    
     // MARK: - Functions for network
+    
     func showLoadingIndicator() {
         activityIndicator.startAnimating()
     }
@@ -46,26 +67,11 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         alertPresenter?.showAlert(alertModel: alert)
     }
     
-    // MARK: - AlertPresenterDelegate
-    func didRecieveAlertController(alertController: UIAlertController?) {
-        guard let alertController = alertController else { return }
-        
-        present(alertController, animated: true)
-        
-        
-    }
+    // MARK: - Functions
     
-    // MARK: - Actions
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        presenter.noButtonClicked()
-    }
-    
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        presenter.yesButtonClicked()
-    }
-    
-    // MARK: - Private functions
     func show(quiz step: QuizStepViewModel) {
+        imageView.layer.borderWidth = 0
+        
         counterLabel.text = step.questionNumber
         textLabel.text = step.question
         imageView.image = step.image
@@ -75,20 +81,11 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
     }
 
     func show(quiz result: QuizResultsViewModel) {
-        guard let statisticService = statisticService else {
-            return
-        }
+        let message = presenter.makeResultsMessage()
         
-        statisticService.store(correct: presenter.correctAnswers, total: presenter.questionsAmount)
-        let text = """
-  Ваш результат: \(presenter.correctAnswers) из \(presenter.questionsAmount)
-  Количество сыгранных квизов: \(statisticService.gamesCount)
-  Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
-  Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
-  """
         let alert = AlertModel(
             title: result.title,
-            message: text,
+            message: message,
             buttonText: result.buttonText) {
                 [weak self] _ in
                 guard let self = self else { return }
@@ -98,38 +95,14 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         alertPresenter?.showAlert(alertModel: alert)
     }
     
-    func showAnswerResult(isCorrect: Bool) {
-        presenter.didAnswer(isCorrectAnswer: isCorrect)
-        
+    func highlightImageBorder(isCorrect: Bool) {
         noButton.isEnabled = false
         yesButton.isEnabled = false
         
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
-            self.presenter.showNextQuestionOrResults()
-            self.imageView.layer.borderWidth = 0
-        }
-        
     }
-    
-//    private func showNextQuestionOrResults() {
-//        if presenter.isLastQuestion() {
-//          let viewModel = QuizResultsViewModel(
-//            title: "Этот раунд окончен!",
-//            text: "",
-//            buttonText: "Сыграть ещё раз")
-//
-//          show(quiz: viewModel)
-//
-//      } else {
-//          presenter.switchToNextQuestion()
-//          questionFactory?.requestNextQuestion()
-//      }
-//    }
 }
 
 /*
