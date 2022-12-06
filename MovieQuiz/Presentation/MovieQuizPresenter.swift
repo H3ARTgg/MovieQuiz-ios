@@ -19,11 +19,11 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private let statisticService: StatisticService!
     private var currentQuestion: QuizQuestion?
     private var questionFactory: QuestionFactoryProtocol?
-    private weak var viewController: MovieQuizViewController?
+    private var viewController: MovieQuizViewControllerProtocol?
     
     // MARK: - Initialization
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol!) {
         self.viewController = viewController
         
         statisticService = StatisticServiceImplementation()
@@ -58,13 +58,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         if isCorrectAnswer {
             correctAnswers += 1
         }
-    }
-    
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
     
     private func proceedWithAnswer(isCorrect: Bool) {
@@ -129,6 +122,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     // MARK: - Functions
     
+    func convert(model: QuizQuestion) -> QuizStepViewModel {
+        return QuizStepViewModel(
+            image: UIImage(data: model.image) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+    }
+    
     func restartGame() {
         correctAnswers = 0
         resetQuestionIndex()
@@ -154,4 +154,5 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
   """
         return text
     }
+    
 }
