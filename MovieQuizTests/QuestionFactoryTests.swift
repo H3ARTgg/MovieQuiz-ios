@@ -112,7 +112,6 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
-            
             XCTAssertTrue(self.check == "ErrorFromServer")
             expectation.fulfill()
         }
@@ -130,7 +129,6 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
-            
             XCTAssertTrue(self.check == "Data")
             expectation.fulfill()
         }
@@ -152,7 +150,6 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 guard let self = self else { return }
-                
                 XCTAssertTrue(self.check == "Question")
                 XCTAssertTrue(self.imageCheck == "ImageLoading")
                 expectation.fulfill()
