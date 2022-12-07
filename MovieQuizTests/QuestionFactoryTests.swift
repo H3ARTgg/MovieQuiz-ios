@@ -26,6 +26,7 @@ final class moviesLoaderMock: MoviesLoading {
                     title: "Hi",
                     rating: "8",
                     imageURL: URL(string: "https")!)]
+    
     var movies = [MostPopularMovie(
         title: "Hello",
         rating: "10",
@@ -92,6 +93,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
+            
             XCTAssertTrue(self.check == "Error")
             expectation.fulfill()
         }
@@ -110,6 +112,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
+            
             XCTAssertTrue(self.check == "ErrorFromServer")
             expectation.fulfill()
         }
@@ -127,6 +130,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
+            
             XCTAssertTrue(self.check == "Data")
             expectation.fulfill()
         }
