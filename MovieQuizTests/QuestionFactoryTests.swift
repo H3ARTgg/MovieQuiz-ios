@@ -10,24 +10,26 @@ final class moviesLoaderMock: MoviesLoading {
     
     let emulateError: Bool
     let fakeURL: Bool
+    let moviesWithFakeURL = [
+        MostPopularMovie(
+            title: "Hello",
+            rating: "10",
+            imageURL: URL(string: "https")!),
+        MostPopularMovie(
+            title: "Hi",
+            rating: "8",
+            imageURL: URL(string: "https")!)]
+    let movies = [
+        MostPopularMovie(
+            title: "Hello",
+            rating: "10",
+            imageURL: URL(string: "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX128_CR0,3,128,176_AL_.jpg")!),
+        MostPopularMovie(
+            title: "Hi",
+            rating: "8",
+            imageURL: URL(string: "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX128_CR0,3,128,176_AL_.jpg")!)
+    ]
     var mostPopularMovies: MostPopularMovies
-    var moviesWithFakeURL = [MostPopularMovie(
-        title: "Hello",
-        rating: "10",
-        imageURL: URL(string: "https")!),
-                  MostPopularMovie(
-                    title: "Hi",
-                    rating: "8",
-                    imageURL: URL(string: "https")!)]
-    
-    var movies = [MostPopularMovie(
-        title: "Hello",
-        rating: "10",
-        imageURL: URL(string: "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX128_CR0,3,128,176_AL_.jpg")!),
-                  MostPopularMovie(
-                    title: "Hi",
-                    rating: "8",
-                    imageURL: URL(string: "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UX128_CR0,3,128,176_AL_.jpg")!)]
     
     init(emulateError: Bool, errorMessage: String, fakeURL: Bool) {
         self.emulateError = emulateError
@@ -105,6 +107,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
+            
             XCTAssertTrue(self.check == "ErrorFromServer")
             expectation.fulfill()
         }
@@ -122,6 +125,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
             guard let self = self else { return }
+            
             XCTAssertTrue(self.check == "Data")
             expectation.fulfill()
         }
@@ -143,6 +147,7 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 guard let self = self else { return }
+                
                 XCTAssertTrue(self.check == "Question")
                 XCTAssertTrue(self.imageCheck == "ImageLoading")
                 expectation.fulfill()
