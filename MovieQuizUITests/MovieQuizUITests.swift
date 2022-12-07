@@ -16,7 +16,6 @@ class MovieQuizUITests: XCTestCase {
         try super.tearDownWithError()
         
         app = nil
-        //app.terminate()
     }
     
     func testEndAlert() {
@@ -34,7 +33,7 @@ class MovieQuizUITests: XCTestCase {
         XCTAssertTrue(alert.buttons.firstMatch.label == "Сыграть ещё раз")
     }
     
-    func testClosingAlert() throws {
+    func testClosingEndAlert() throws {
         // Проверка на закрытие алерта и обнуление лэйбла с индеком
         for _ in 1...10 {
             app.buttons["Yes"].tap()
