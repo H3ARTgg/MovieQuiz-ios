@@ -1,10 +1,3 @@
-//
-//  QuizQuestion.swift
-//  MovieQuiz
-//
-//  Created by Максим Фасхетдинов on 08.11.2022.
-//
-
 import Foundation
 
 struct QuizQuestion {

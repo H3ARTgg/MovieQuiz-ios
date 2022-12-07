@@ -1,10 +1,3 @@
-//
-//  MovieQuizViewControlletProtocol.swift
-//  MovieQuiz
-//
-//  Created by Максим Фасхетдинов on 06.12.2022.
-//
-
 import Foundation
 
 protocol MovieQuizViewControllerProtocol {
