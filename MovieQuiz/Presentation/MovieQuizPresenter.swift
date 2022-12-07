@@ -147,11 +147,11 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         statisticService.store(correct: correctAnswers, total: questionsAmount)
         
         let text = """
-  Ваш результат: \(correctAnswers) из \(questionsAmount)
-  Количество сыгранных квизов: \(statisticService.gamesCount)
-  Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
-  Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
-  """
+        Ваш результат: \(correctAnswers) из \(questionsAmount)
+        Количество сыгранных квизов: \(statisticService.gamesCount)
+        Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
+        Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+        """
         return text
     }
     

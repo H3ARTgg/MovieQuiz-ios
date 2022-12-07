@@ -141,18 +141,21 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         let expectation = expectation(description: "Question requestion success and image loading expectation")
         
         questionFactory.loadData()
-        questionFactory.requestNextQuestion()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            guard let self = self else { return }
-            print(self.check)
-            print(self.imageCheck)
-            XCTAssertTrue(self.check == "Question")
-            XCTAssertTrue(self.imageCheck == "ImageLoading")
-            expectation.fulfill()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            
+            questionFactory.requestNextQuestion()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                guard let self = self else { return }
+                
+                XCTAssertTrue(self.check == "Question")
+                XCTAssertTrue(self.imageCheck == "ImageLoading")
+                expectation.fulfill()
+            }
         }
         
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 4)
     }
     
     func testRequestQuestionImageFail() throws {
@@ -160,17 +163,21 @@ class QuestionFactoryTests: XCTestCase, QuestionFactoryDelegate {
         let questionFactory = QuestionFactory(delegate: self, moviesLoader: movieLoader)
         
         let expectation = expectation(description: "Load image with error expectation")
-        
         questionFactory.loadData()
-        questionFactory.requestNextQuestion()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            guard let self = self else { return }
-            XCTAssertTrue(self.check == "ErrorFromServer")
-            expectation.fulfill()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            
+            questionFactory.requestNextQuestion()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                guard let self = self else { return }
+                
+                XCTAssertTrue(self.check == "ErrorFromServer")
+                expectation.fulfill()
+            }
         }
         
-        waitForExpectations(timeout: 2)
+        waitForExpectations(timeout: 4)
     }
     
 }
